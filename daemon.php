@@ -45,8 +45,8 @@ while(1) {
 	$emailsAEnviar = getEmail($db);
 	if (sizeof($emailsAEnviar) != 0) {
 		foreach ($emailsAEnviar as $email) {
-			echo "Enviando emails para $email\n";
 			$from = $email['from'];
+			echo "Enviando emails para $from\n";
 			$pass = getPass($db, $from);
 			$fromRepli = getUsuario($db, $from);
 			
