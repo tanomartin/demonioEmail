@@ -38,8 +38,8 @@ while(1) {
 	$db = new mysqli($hostLocal,$usuarioLocal,$claveLocal,$esquemaLocal);
 	
 	if (!$db) {
-		echo "Error: No se pudo conectar a MySQL." . PHP_EOL;
-		echo "Error de depuracion: " . mysqli_connect_errno() . PHP_EOL;
+		echo "Error: No se pudo conectar a MySQL." . PHP_EOL ."\n";
+		echo "Error de depuracion: " . mysqli_connect_errno() . PHP_EOL ."\n";
 		exit;
 	}
 
@@ -65,7 +65,7 @@ while(1) {
 	}
 	
 	$db->close();
-    sleep(15);
+    sleep(60);
 }
 
 // Esta es mi funcion de salida
