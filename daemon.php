@@ -30,7 +30,7 @@ umask(0);
 // Aqui digo que hacer si recibo la señal de finalizacion (kill -15)
 pcntl_signal(SIGTERM, "exit_daemon");
 
-echo "Demonio corriendo con pid $pid\n";
+echo "Demonio corriendo con pid  ".getmypid()."\n";
 // Si estamos aqui oficialmente somos un daemon
 // revisamos la ejecucion por cada linnea de codigo
 declare(ticks = 1);
