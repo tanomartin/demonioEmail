@@ -42,6 +42,14 @@ function getEmail($db) {
 //obtengo los adjuntos a enviar
 function getAttachment($db, $idEmail) {
 	$arrayAttachment = array();
+	$sqlGetAttachment = "SELECT * FROM bandejasalidaadjuntos WHERE idemail = $idEmail";
+	$resGetAttachment = $db->query($sqlGetAttachment);
+	if ($resGetAttachment) {
+		while ($rowGetAttachment = $resGetAttachment->fetch_assoc()) {
+			$arrayAttachment[] = $rowGetAttachment;
+		}
+		$resGetAttachment->close();
+	}
 	return $arrayAttachment;
 }
 
