@@ -4,7 +4,7 @@ include_once('funciones.php');
 include_once('claves.php');
 
 // Primero creamos un proceso hijo
-$pid = pcntl_fork();
+/*$pid = pcntl_fork();
 if($pid == -1){
     die("Algo paso con el forking del proceso!");
 }
@@ -28,7 +28,7 @@ chdir("/");
 umask(0);
 
 // Aqui digo que hacer si recibo la señal de finalizacion (kill -15)
-pcntl_signal(SIGTERM, "exit_daemon");
+pcntl_signal(SIGTERM, "exit_daemon");*/
 
 // Si estamos aqui oficialmente somos un daemon
 // revisamos la ejecucion por cada linnea de codigo
@@ -43,16 +43,24 @@ while(1) {
 	}
 
 	$emailsAEnviar = getEmail($db);
-	foreach ($emailsAEnviar as $email) {
-		$from = $email['from'];
-		$pass = getPass($db, $username);
-		$fromRepli = getUsuario($db, $username);
-		$subject = $email['subject'];
-		$bodymail = $email['body'];
-		$address = $email['address'];
-		$attachments = getAttachment($db, $email['id']);
-		envioMail($from, $pass, $fromRepli, $subject, $bodymail, $address, $attachments);
-		updateEmailEnviado($db, $email['id']);
+	if (sizeof($emailsAEnviar) != 0) {
+		foreach ($emailsAEnviar as $email) {
+			$from = $email['from'];
+			$pass = getPass($db, $username);
+			$fromRepli = getUsuario($db, $username);
+			$subject = $email['subject'];
+			$bodymail = $email['body'];
+			$address = $email['address'];
+			$attachments = getAttachment($db, $email['id']);
+			envioMail($from, $pass, $fromRepli, $subject, $bodymail, $address, $attachments);
+			if (updateEmailEnviado($db, $email['id']) == -1) {
+				this.exit_daemon("exit_daemon");
+			} else {
+				echo "Se envio el mail id ".$email['id']."<br>";
+			}
+		}
+	} else {
+		echo "No hay mails para enviar<br>";
 	}
 	
 	mysqli_close($db);
