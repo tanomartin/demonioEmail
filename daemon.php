@@ -1,13 +1,12 @@
 <?php
 
-include_once('envioMailGeneral.php');
-// Simple demonio escrito en PHP parte 2
- 
-// Primero creamos un proceso hijo
+include_once('funciones.php');
+include_once('claves.php');
 
+// Primero creamos un proceso hijo
 $pid = pcntl_fork();
 if($pid == -1){
-    die("Algo pas贸 con el forking del proceso!");
+    die("Algo paso con el forking del proceso!");
 }
 
 // Preguntamos si somos el proceso padre o el hijo recien construido
@@ -28,41 +27,41 @@ if (!posix_setsid()) {
 chdir("/");
 umask(0);
 
-// Aqu铆 digo que hacer si recibo la se帽al de finalizaci贸n (kill -15)
+// Aqui digo que hacer si recibo la se馻l de finalizacion (kill -15)
 pcntl_signal(SIGTERM, "exit_daemon");
 
 // Si estamos aqui oficialmente somos un daemon
-
-// revisamos la ejecuci贸n por cada l铆nea de c贸digo
+// revisamos la ejecucion por cada linnea de codigo
 declare(ticks = 1);
-global $db;
 while(1) {
-	$db = mysqli_connect("cronos","sistemas", "blam7326","madera");
+	$db = mysqli_connect($hostLocal,$usuarioLocal,$claveLocal,$esquemaLocal);
+	
 	if (!$db) {
 		echo "Error: No se pudo conectar a MySQL." . PHP_EOL;
-		echo "errno de depuraci贸n: " . mysqli_connect_errno() . PHP_EOL;
-		echo "error de depuraci贸n: " . mysqli_connect_error() . PHP_EOL;
+		echo "Error de depuracion: " . mysqli_connect_errno() . PHP_EOL;
 		exit;
 	}
 
-    $date = date("h:i:s");
-    echo "$date hola amigo, te saluda el daemon que envia mail!\n";
-    $username = "sistemas@ospim.com.ar";
-    $passw = "pepepascual";
-    $fromRepli = "Sistemas";
-    $subject = "Prueba de envio";
-    $bodymail = "<body><br><br>Este es un mensaje de Aviso.<br><br>Prueba desde el demonio";
-    $address = "mmzucchiatti@usimra.com.ar";
-    envioMail($username, $passw, $fromRepli, $subject, $bodymail, $address);
+	$emailsAEnviar = getEmail($db);
+	foreach ($emailsAEnviar as $email) {
+		$from = $email['from'];
+		$pass = getPass($db, $username);
+		$fromRepli = getUsuario($db, $username);
+		$subject = $email['subject'];
+		$bodymail = $email['body'];
+		$address = $email['address'];
+		$attachments = getAttachment($db, $email['id']);
+		envioMail($from, $pass, $fromRepli, $subject, $bodymail, $address, $attachments);
+		updateEmailEnviado($db, $email['id']);
+	}
 	
 	mysqli_close($db);
-	
-    sleep(30);
+    sleep(900);
 }
 
-// Esta es mi funci贸n de salida
+// Esta es mi funcion de salida
 function exit_daemon($signo) {
-    echo "Alguien quiere que me vaya!, recibo la se帽al $signo\n";
+    echo "Alguien quiere que me vaya!, recibo la se馻l $signo\n";
     exit("daemon terminado!\n");
 }
 ?>
