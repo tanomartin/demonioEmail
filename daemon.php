@@ -58,6 +58,8 @@ while(1) {
 			echo "Enviando emails desde $from a $address\n";
 			if (envioMail($from, $pass, $fromRepli, $subject, $bodymail, $address, $attachments)) {
 				updateEmailEnviado($db, $email['id']);
+			} else {
+				echo "No se pudo enviar\n";
 			}
 		}
 	} else {

@@ -20,7 +20,8 @@ function envioMail($from, $passw, $fromRepli, $subject, $bodymail, $address, $at
 	$nameto = "";
 	$mail->AddAddress($address, $nameto);
 	foreach($attachments as $attachment) {
-		$mail->AddAttachment($attachment);
+		//CONTROLO EL ADJUNTO???
+		$mail->AddAttachment($attachment['adjunto']);
 	}
   	return $mail->Send();
 }
