@@ -54,7 +54,7 @@ while(1) {
 			$address = $email['address'];
 			$attachments = getAttachment($db, $email['id']);
 			
-			echo "Enviando emails desde $from a $addres\n";
+			echo "Enviando emails desde $from a $address\n";
 			envioMail($from, $pass, $fromRepli, $subject, $bodymail, $address, $attachments);
 			
 			updateEmailEnviado($db, $email['id']);
