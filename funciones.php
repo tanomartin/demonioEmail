@@ -29,7 +29,6 @@ function envioMail($from, $passw, $fromRepli, $subject, $bodymail, $address, $at
 function getEmail($db) {
 	$arrayEmails = array();
 	$sqlGetEmail = "SELECT * FROM bandejasalida WHERE enviado = 0";
-	echo $sqlGetEmail."<br>";
 	$resGetEmail = $db->query($sqlGetEmail);
 	if ($resGetEmail) {
 		while ($rowGetEmail = $resGetEmail->fetch_assoc()) {
@@ -49,7 +48,6 @@ function getAttachment($db, $idEmail) {
 //obetengo el password de email
 function getPass($db, $email) {
 	$sqlGetPass = "SELECT password FROM emails WHERE email like '$email'";
-	echo $sqlGetPass."<br>";
 	$resGetPass = $db->query($sqlGetPass);
 	if ($resGetPass) {
 		$rowGetPass = $resGetPass->fetch_assoc();
@@ -61,7 +59,6 @@ function getPass($db, $email) {
 //obetengo el usuario de email
 function getUsuario($db, $email) {
 	$sqlGetNombre = "SELECT u.nombre FROM usuarios u, emails e WHERE e.email = '$email' and e.idusuario = u.id";
-	echo $sqlGetNombre."<br>";
 	$resGetNombre = $db->query($sqlGetNombre);
 	if ($resGetNombre) {
 		$rowGetNombre = $resGetNombre->fetch_assoc();
@@ -74,7 +71,6 @@ function getUsuario($db, $email) {
 function updateEmailEnviado($db, $idEmail) {
 	$fechaenvio = date ( "Y-m-d H:i:s" );
 	$sqlUpdateEnvio = "UPDATE bandejasalida SET enviado = 1, fechaenvio = '$fechaenvio' WHERE id = $idEmail";
-	echo $sqlUpdateEnvio."<br>";
 	$db->query($sqlUpdateEnvio);
 }
 

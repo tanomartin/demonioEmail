@@ -43,14 +43,12 @@ while(1) {
 	}
 
 	$emailsAEnviar = getEmail($db);
-	var_dump($emailsAEnviar);echo "<br><br>";
 	if (sizeof($emailsAEnviar) != 0) {
 		foreach ($emailsAEnviar as $email) {
+			echo "Enviando emails para $email\n";
 			$from = $email['from'];
 			$pass = getPass($db, $from);
-			echo $pass."<br><br>";
 			$fromRepli = getUsuario($db, $from);
-			echo $fromRepli."<br><br>";
 			
 			$subject = $email['subject'];
 			$bodymail = $email['body'];
@@ -62,7 +60,7 @@ while(1) {
 			updateEmailEnviado($db, $email['id']);
 		}
 	} else {
-		echo "No hay mails para enviar<br>";
+		echo "No hay mails para enviar\n";
 	}
 	
 	$db->close();
