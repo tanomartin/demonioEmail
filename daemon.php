@@ -46,7 +46,6 @@ while(1) {
 	if (sizeof($emailsAEnviar) != 0) {
 		foreach ($emailsAEnviar as $email) {
 			$from = $email['from'];
-			echo "Enviando emails para $from\n";
 			$pass = getPass($db, $from);
 			$fromRepli = getUsuario($db, $from);
 			
@@ -55,6 +54,7 @@ while(1) {
 			$address = $email['address'];
 			$attachments = getAttachment($db, $email['id']);
 			
+			echo "Enviando emails desde $from a $addres\n";
 			envioMail($from, $pass, $fromRepli, $subject, $bodymail, $address, $attachments);
 			
 			updateEmailEnviado($db, $email['id']);
