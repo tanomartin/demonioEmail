@@ -19,10 +19,10 @@ function envioMail($from, $passw, $fromRepli, $subject, $bodymail, $address, $at
 	$mail->MsgHTML($bodymail);
 	$nameto = "";
 	$mail->AddAddress($address, $nameto);
-	/*foreach($attachments as $attachment) {
+	foreach($attachments as $attachment) {
 		$mail->AddAttachment($attachment);
-	}*/
-	$mail->Send();	
+	}
+  	return $mail->Send();
 }
 
 //obtengo los emails a enviar
