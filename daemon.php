@@ -3,8 +3,8 @@ require('funciones.php');
 require('claves.php');
 require('myErrorHandler.php');
 
-ini_set('log_errors',TRUE);
-ini_set('error_log',$logfile);
+//ini_set('log_errors',TRUE);
+//ini_set('error_log',$logfile);
 
 // Primero creamos un proceso hijo
 $pid = pcntl_fork();
@@ -19,7 +19,7 @@ if($pid) {
     // Soy el padre por lo tanto necesito morir
     $log = "Proceso padre terminado";
 	write_log($log, "INFO");
-    exit($log);
+    exit($log."\n");
 }
 
 // De aqui en adelante solo se ejecuta si soy el hijo y futuro daemon
@@ -87,7 +87,7 @@ while(1) {
 function exit_daemon($signo) {
 	require('claves.php');
 	$bodymail = "Alguien quiere que me vaya!, recibo la señal $signo";
-	error_log($bodymail,3,$logfile);
+	//error_log($bodymail,3,$logfile);
 	envioMail($emailErrorSalida, $claveEmailSalida, "Sistemas", "Demonio Finalizado", $bodymail, $emailErrorEntrada, null);
     exit();
 }
