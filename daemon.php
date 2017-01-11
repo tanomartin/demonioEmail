@@ -3,14 +3,11 @@ require('funciones.php');
 require('claves.php');
 require('myErrorHandler.php');
 
-//ini_set('log_errors',TRUE);
-//ini_set('error_log',$logfile);
-
 // Primero creamos un proceso hijo
 $pid = pcntl_fork();
 if($pid == -1){
 	$log = "Algo paso con el forking del proceso!";
-	write_log($log, "ERROR1");
+	write_log($log, "ERROR");
     die($log."\n");
 }
 
@@ -25,20 +22,14 @@ if($pid) {
 // De aqui en adelante solo se ejecuta si soy el hijo y futuro daemon
 $log = "Demonio corriendo con pid ".getmypid();
 write_log($log, "INFO");
-echo $log."\n";
 
 // Lo siguiente que hacemos es soltarnos de la terminal de control
 if (!posix_setsid()) {
  	$log = "No pude soltarme de la terminal";
-	write_log($log, "ERROR2");
-	echo $log."\n";
+	write_log($log, "ERROR");
     exit_daemon ($log);
 }
 
-// De este punto en adelante debemos cambiarnos de directorio y 
-// hacemos las recomendaciones de Wikipedia para un daemon
-//chdir("/");
-//umask(0);
 
 // Aqui digo que hacer si recibo la señal de finalizacion (kill -15)
 pcntl_signal(SIGTERM, "exit_daemon");
@@ -51,8 +42,7 @@ while(1) {
 	
 	if (!$db) {
 		$log = "Error: No se pudo conectar a MySQL." . PHP_EOL ." - Error de depuracion: " . mysqli_connect_errno() . PHP_EOL;
-		//write_log($log, "ERROR3");
-		echo $log."\n";
+		write_log($log, "ERROR");
 		exit_daemon($log);
 	}
 
@@ -69,19 +59,16 @@ while(1) {
 			$attachments = getAttachment($db, $email['id']);
 			
 			$log = "Enviando emails desde $from a $address";
-			//write_log($log, "INFO");
-			echo $log."\n";
+			write_log($log, "INFO");
 			if (envioMail($from, $pass, $fromRepli, $subject, $bodymail, $address, $attachments)) {
 				updateEmailEnviado($db, $email['id']);
 			} else {
 				$log = "No se pudo enviar";
-				echo $log."\n";
 				write_log($log, "WARNING");
 			}
 		}
 	} else {
 		$log = "No hay mails para enviar";
-		echo $log."\n";
 		write_log($log, "INFO");
 	}
 	
@@ -93,7 +80,7 @@ while(1) {
 function exit_daemon($signo) {
 	require('claves.php');
 	$bodymail = "Alguien quiere que me vaya!, recibo la señal $signo";
-	write_log($bodymail,3,$logfile);
+	write_log($bodymail,"FINALIZADO");
 	envioMail($emailErrorSalida, $claveEmailSalida, "Sistemas", "Demonio Finalizado", $bodymail, $emailErrorEntrada, null);
     exit();
 }
