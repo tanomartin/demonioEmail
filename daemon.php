@@ -83,8 +83,8 @@ while(1) {
 		}
 	} else {
 		$log = "No hay mails para enviar";
-		echo $log;
-		//write_log($log, "INFO");
+		echo $log."\n";
+		write_log($log, "INFO");
 	}
 	
 	$db->close();
