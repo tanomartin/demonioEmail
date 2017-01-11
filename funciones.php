@@ -19,9 +19,11 @@ function envioMail($from, $passw, $fromRepli, $subject, $bodymail, $address, $at
 	$mail->MsgHTML($bodymail);
 	$nameto = "";
 	$mail->AddAddress($address, $nameto);
-	foreach($attachments as $attachment) {
-		//CONTROLO EL ADJUNTO???
-		$mail->AddAttachment($attachment['adjunto']);
+	if ($attachments != null) {
+		foreach($attachments as $attachment) {
+			//CONTROLO EL ADJUNTO???
+			$mail->AddAttachment($attachment['adjunto']);
+		}
 	}
   	return $mail->Send();
 }
@@ -36,6 +38,8 @@ function getEmail($db) {
 			$arrayEmails[] = $rowGetEmail;
 		}
 		$resGetEmail->close();
+	} else {
+		 throw new Exception($db->error);
 	}
 	return $arrayEmails;
 }
@@ -50,6 +54,8 @@ function getAttachment($db, $idEmail) {
 			$arrayAttachment[] = $rowGetAttachment;
 		}
 		$resGetAttachment->close();
+	} else {
+		 throw new Exception($db->error);
 	}
 	return $arrayAttachment;
 }
@@ -61,6 +67,8 @@ function getPass($db, $email) {
 	if ($resGetPass) {
 		$rowGetPass = $resGetPass->fetch_assoc();
 		$resGetPass->close();
+	} else {
+		 throw new Exception($db->error);
 	}
 	return $rowGetPass['password'];
 }
@@ -72,6 +80,8 @@ function getUsuario($db, $email) {
 	if ($resGetNombre) {
 		$rowGetNombre = $resGetNombre->fetch_assoc();
 		$resGetNombre->close();
+	} else {
+		 throw new Exception($db->error);
 	}
 	return $rowGetNombre['nombre'];
 }
@@ -80,7 +90,17 @@ function getUsuario($db, $email) {
 function updateEmailEnviado($db, $idEmail) {
 	$fechaenvio = date ( "Y-m-d H:i:s" );
 	$sqlUpdateEnvio = "UPDATE bandejasalida SET enviado = 1, fechaenvio = '$fechaenvio' WHERE id = $idEmail";
-	$db->query($sqlUpdateEnvio);
+	$resUpdateEnvio = $db->query($sqlUpdateEnvio);
+	if (!$resUpdateEnvio) {
+		throw new Exception($db->error);
+	}
+}
+
+function write_log($cadena,$tipo) {
+	require('claves.php');
+	$arch = fopen($logfile, "a+");
+	fwrite($arch, "[".date("Y-m-d H:i:s")." - $tipo ] ".$cadena."\n");
+	fclose($arch);
 }
 
 ?>

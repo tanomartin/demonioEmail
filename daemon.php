@@ -1,25 +1,34 @@
 <?php
+require('funciones.php');
+require('claves.php');
+require('myErrorHandler.php');
 
-include_once('funciones.php');
-include_once('claves.php');
+ini_set('log_errors',TRUE);
+ini_set('error_log',$logfile);
 
 // Primero creamos un proceso hijo
 $pid = pcntl_fork();
 if($pid == -1){
-    die("Algo paso con el forking del proceso!");
+	$log = "Algo paso con el forking del proceso!";
+	write_log($log, "ERROR");
+    die($log);
 }
 
 // Preguntamos si somos el proceso padre o el hijo recien construido
 if($pid) {
     // Soy el padre por lo tanto necesito morir
-    exit("Proceso padre terminado...\n");
+    $log = "Proceso padre terminado";
+	write_log($log, "INFO");
+    exit($log);
 }
 
 // De aqui en adelante solo se ejecuta si soy el hijo y futuro daemon
 
 // Lo siguiente que hacemos es soltarnos de la terminal de control
 if (!posix_setsid()) {
-    die ("No pude soltarme de la terminal");
+ 	$log = "No pude soltarme de la terminal";
+	write_log($log, "ERROR");
+    exit_daemon ($log);
 }
 
 // De este punto en adelante debemos cambiarnos de directorio y 
@@ -38,9 +47,9 @@ while(1) {
 	$db = new mysqli($hostLocal,$usuarioLocal,$claveLocal,$esquemaLocal);
 	
 	if (!$db) {
-		echo "Error: No se pudo conectar a MySQL." . PHP_EOL ."\n";
-		echo "Error de depuracion: " . mysqli_connect_errno() . PHP_EOL ."\n";
-		exit;
+		$log = "Error: No se pudo conectar a MySQL." . PHP_EOL ." - Error de depuracion: " . mysqli_connect_errno() . PHP_EOL;
+		write_log($log, "ERROR");
+		exit_daemon($log);
 	}
 
 	$emailsAEnviar = getEmail($db);
@@ -55,15 +64,18 @@ while(1) {
 			$address = $email['address'];
 			$attachments = getAttachment($db, $email['id']);
 			
-			echo "Enviando emails desde $from a $address\n";
+			$log = "Enviando emails desde $from a $address";
+			write_log($log, "INFO");
 			if (envioMail($from, $pass, $fromRepli, $subject, $bodymail, $address, $attachments)) {
 				updateEmailEnviado($db, $email['id']);
 			} else {
-				echo "No se pudo enviar\n";
+				$log = "No se pudo enviar\n";
+				write_log($log, "WARNING");
 			}
 		}
 	} else {
-		echo "No hay mails para enviar\n";
+		$log = "No hay mails para enviar";
+		write_log($log, "INFO");
 	}
 	
 	$db->close();
@@ -72,7 +84,10 @@ while(1) {
 
 // Esta es mi funcion de salida
 function exit_daemon($signo) {
-    echo "Alguien quiere que me vaya!, recibo la señal $signo\n";
-    exit("daemon terminado!\n");
+	require('claves.php');
+	$bodymail = "Alguien quiere que me vaya!, recibo la señal $signo";
+	error_log($bodymail,3,$logfile);
+	envioMail($emailErrorSalida, $claveEmailSalida, "Sistemas", "Demonio Finalizado", $bodymail, $emailErrorEntrada, null);
+    exit();
 }
 ?>
