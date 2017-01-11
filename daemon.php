@@ -52,7 +52,7 @@ while(1) {
 	if (!$db) {
 		$log = "Error: No se pudo conectar a MySQL." . PHP_EOL ." - Error de depuracion: " . mysqli_connect_errno() . PHP_EOL;
 		//write_log($log, "ERROR3");
-		echo $log;
+		echo $log."\n";
 		exit_daemon($log);
 	}
 
@@ -70,19 +70,19 @@ while(1) {
 			
 			$log = "Enviando emails desde $from a $address";
 			//write_log($log, "INFO");
-			echo $log;
+			echo $log."\n";
 			if (envioMail($from, $pass, $fromRepli, $subject, $bodymail, $address, $attachments)) {
 				updateEmailEnviado($db, $email['id']);
 			} else {
-				$log = "No se pudo enviar\n";
-				echo $log;
+				$log = "No se pudo enviar";
+				echo $log."\n";
 				//write_log($log, "WARNING");
 			}
 		}
 	} else {
 		$log = "No hay mails para enviar";
 		echo $log."\n";
-		write_log($log, "INFO");
+		//write_log($log, "INFO");
 	}
 	
 	$db->close();
