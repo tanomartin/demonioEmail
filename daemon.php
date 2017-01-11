@@ -16,11 +16,12 @@ if($pid) {
     // Soy el padre por lo tanto necesito morir
     $log = "Proceso padre terminado";
 	write_log($log, "INFO");
-    exit($log."\n");
+    exit();
 }
 
 // De aqui en adelante solo se ejecuta si soy el hijo y futuro daemon
 $log = "Demonio corriendo con pid ".getmypid();
+echo $log."\n";
 write_log($log, "INFO");
 
 // Lo siguiente que hacemos es soltarnos de la terminal de control
