@@ -23,6 +23,8 @@ if($pid) {
 }
 
 // De aqui en adelante solo se ejecuta si soy el hijo y futuro daemon
+$log = "Demonio corriendo con pid ".getmypid();
+write_log($log, "INFO");
 
 // Lo siguiente que hacemos es soltarnos de la terminal de control
 if (!posix_setsid()) {
@@ -39,8 +41,6 @@ umask(0);
 // Aqui digo que hacer si recibo la señal de finalizacion (kill -15)
 pcntl_signal(SIGTERM, "exit_daemon");
 
-$log = "Demonio corriendo con pid  ".getmypid();
-write_log($log, "INFO");
 // Si estamos aqui oficialmente somos un daemon
 // revisamos la ejecucion por cada linnea de codigo
 declare(ticks = 1);
