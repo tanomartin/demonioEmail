@@ -74,7 +74,7 @@ while(1) {
 	}
 	
 	$db->close();
-    sleep(60);
+    sleep(900);
 }
 
 // Esta es mi funcion de salida
