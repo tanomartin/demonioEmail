@@ -10,7 +10,7 @@ require('myErrorHandler.php');
 $pid = pcntl_fork();
 if($pid == -1){
 	$log = "Algo paso con el forking del proceso!";
-	write_log($log, "ERROR");
+	write_log($log, "ERROR1");
     die($log);
 }
 
@@ -29,7 +29,7 @@ write_log($log, "INFO");
 // Lo siguiente que hacemos es soltarnos de la terminal de control
 if (!posix_setsid()) {
  	$log = "No pude soltarme de la terminal";
-	write_log($log, "ERROR");
+	write_log($log, "ERROR2");
     exit_daemon ($log);
 }
 
@@ -49,7 +49,7 @@ while(1) {
 	
 	if (!$db) {
 		$log = "Error: No se pudo conectar a MySQL." . PHP_EOL ." - Error de depuracion: " . mysqli_connect_errno() . PHP_EOL;
-		write_log($log, "ERROR");
+		write_log($log, "ERROR3");
 		exit_daemon($log);
 	}
 
