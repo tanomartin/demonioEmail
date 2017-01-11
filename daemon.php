@@ -10,8 +10,8 @@ require('myErrorHandler.php');
 $pid = pcntl_fork();
 if($pid == -1){
 	$log = "Algo paso con el forking del proceso!";
-	//write_log($log, "ERROR1");
-	echo $log;
+	write_log($log, "ERROR1");
+	echo $log."\n";
     die($log);
 }
 
@@ -19,21 +19,21 @@ if($pid == -1){
 if($pid) {
     // Soy el padre por lo tanto necesito morir
     $log = "Proceso padre terminado";
-	//write_log($log, "INFO");
-	echo $log;
+	write_log($log, "INFO");
+	echo $log."\n";
     exit($log."\n");
 }
 
 // De aqui en adelante solo se ejecuta si soy el hijo y futuro daemon
 $log = "Demonio corriendo con pid ".getmypid();
-//write_log($log, "INFO");
-echo $log;
+write_log($log, "INFO");
+echo $log."\n";
 
 // Lo siguiente que hacemos es soltarnos de la terminal de control
 if (!posix_setsid()) {
  	$log = "No pude soltarme de la terminal";
-	//write_log($log, "ERROR2");
-	echo $log;
+	write_log($log, "ERROR2");
+	echo $log."\n";
     exit_daemon ($log);
 }
 
