@@ -37,8 +37,8 @@ if (!posix_setsid()) {
 
 // De este punto en adelante debemos cambiarnos de directorio y 
 // hacemos las recomendaciones de Wikipedia para un daemon
-chdir("/");
-umask(0);
+//chdir("/");
+//umask(0);
 
 // Aqui digo que hacer si recibo la señal de finalizacion (kill -15)
 pcntl_signal(SIGTERM, "exit_daemon");
@@ -76,13 +76,13 @@ while(1) {
 			} else {
 				$log = "No se pudo enviar";
 				echo $log."\n";
-				//write_log($log, "WARNING");
+				write_log($log, "WARNING");
 			}
 		}
 	} else {
 		$log = "No hay mails para enviar";
 		echo $log."\n";
-		//write_log($log, "INFO");
+		write_log($log, "INFO");
 	}
 	
 	$db->close();
