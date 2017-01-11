@@ -11,8 +11,7 @@ $pid = pcntl_fork();
 if($pid == -1){
 	$log = "Algo paso con el forking del proceso!";
 	write_log($log, "ERROR1");
-	echo $log."\n";
-    die($log);
+    die($log."\n");
 }
 
 // Preguntamos si somos el proceso padre o el hijo recien construido
@@ -20,7 +19,6 @@ if($pid) {
     // Soy el padre por lo tanto necesito morir
     $log = "Proceso padre terminado";
 	write_log($log, "INFO");
-	echo $log."\n";
     exit($log."\n");
 }
 
