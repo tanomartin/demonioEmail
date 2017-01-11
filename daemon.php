@@ -10,7 +10,8 @@ require('myErrorHandler.php');
 $pid = pcntl_fork();
 if($pid == -1){
 	$log = "Algo paso con el forking del proceso!";
-	write_log($log, "ERROR1");
+	//write_log($log, "ERROR1");
+	echo $log;
     die($log);
 }
 
@@ -18,18 +19,21 @@ if($pid == -1){
 if($pid) {
     // Soy el padre por lo tanto necesito morir
     $log = "Proceso padre terminado";
-	write_log($log, "INFO");
+	//write_log($log, "INFO");
+	echo $log;
     exit($log."\n");
 }
 
 // De aqui en adelante solo se ejecuta si soy el hijo y futuro daemon
 $log = "Demonio corriendo con pid ".getmypid();
-write_log($log, "INFO");
+//write_log($log, "INFO");
+echo $log;
 
 // Lo siguiente que hacemos es soltarnos de la terminal de control
 if (!posix_setsid()) {
  	$log = "No pude soltarme de la terminal";
-	write_log($log, "ERROR2");
+	//write_log($log, "ERROR2");
+	echo $log;
     exit_daemon ($log);
 }
 
@@ -49,7 +53,8 @@ while(1) {
 	
 	if (!$db) {
 		$log = "Error: No se pudo conectar a MySQL." . PHP_EOL ." - Error de depuracion: " . mysqli_connect_errno() . PHP_EOL;
-		write_log($log, "ERROR3");
+		//write_log($log, "ERROR3");
+		echo $log;
 		exit_daemon($log);
 	}
 
@@ -66,17 +71,20 @@ while(1) {
 			$attachments = getAttachment($db, $email['id']);
 			
 			$log = "Enviando emails desde $from a $address";
-			write_log($log, "INFO");
+			//write_log($log, "INFO");
+			echo $log;
 			if (envioMail($from, $pass, $fromRepli, $subject, $bodymail, $address, $attachments)) {
 				updateEmailEnviado($db, $email['id']);
 			} else {
 				$log = "No se pudo enviar\n";
-				write_log($log, "WARNING");
+				echo $log;
+				//write_log($log, "WARNING");
 			}
 		}
 	} else {
 		$log = "No hay mails para enviar";
-		write_log($log, "INFO");
+		echo $log;
+		//write_log($log, "INFO");
 	}
 	
 	$db->close();
