@@ -25,7 +25,7 @@ function envioMail($from, $passw, $fromRepli, $subject, $bodymail, $address, $at
 		}
 	}
 	if(!$mail->Send()) {
-		throw new Exception($mail­>ErrorInfo);
+		return false;
 	}
 	return true;
 }
