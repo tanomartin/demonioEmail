@@ -59,14 +59,15 @@ while(1) {
 			$address = $email['address'];
 			$attachments = getAttachment($db, $email['id']);
 			
-			$log = "Enviando emails desde $from a $address";
-			write_log($log, "INFO");
 			if (envioMail($from, $pass, $fromRepli, $subject, $bodymail, $address, $attachments)) {
 				updateEmailEnviado($db, $email['id']);
+				$log = "Se Envió email desde $from a $address";
+				write_log($log, "INFO");
 			} else {
-				$log = "No se pudo enviar";
+				$log = "No se pudo enviar email desde $from a $address";
 				write_log($log, "WARNING");
 			}
+			
 		}
 	} else {
 		$log = "No hay mails para enviar";

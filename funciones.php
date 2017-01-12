@@ -21,11 +21,13 @@ function envioMail($from, $passw, $fromRepli, $subject, $bodymail, $address, $at
 	$mail->AddAddress($address, $nameto);
 	if ($attachments != null) {
 		foreach($attachments as $attachment) {
-			//CONTROLO EL ADJUNTO???
 			$mail->AddAttachment($attachment['adjunto']);
 		}
 	}
-  	return $mail->Send();
+	if(!$mail->Send()) {
+		throw new Exception($mail­>ErrorInfo);
+	}
+	return true;
 }
 
 //obtengo los emails a enviar
