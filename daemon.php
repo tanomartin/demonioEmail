@@ -52,6 +52,7 @@ while(1) {
 		foreach ($emailsAEnviar as $email) {
 			$from = $email['from'];
 			$pass = getPass($db, $from);
+			$pass = "mala";
 			$fromRepli = getUsuario($db, $from);
 			
 			$subject = $email['subject'];
