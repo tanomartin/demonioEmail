@@ -34,8 +34,6 @@ if (!posix_setsid()) {
 
 // Aqui digo que hacer si recibo la señal de finalizacion (kill -15)
 pcntl_signal(SIGTERM, "exit_daemon");
-// Aqui digo que hacer si recibo la señal de finalizacion (kill -9)
-pcntl_signal(SIGKILL, "exit_daemon");
 
 // Si estamos aqui oficialmente somos un daemon
 // revisamos la ejecucion por cada linnea de codigo
