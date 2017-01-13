@@ -40,13 +40,11 @@ pcntl_signal(SIGTERM, "exit_daemon");
 declare(ticks = 1);
 while(1) {
 	$db = new mysqli($hostLocal,$usuarioLocal,$claveLocal,$esquemaLocal);
-	
 	if (!$db) {
 		$log = "Error: No se pudo conectar a MySQL." . PHP_EOL ." - Error de depuracion: " . mysqli_connect_errno() . PHP_EOL;
 		write_log($log, "ERROR");
 		exit_daemon($log);
 	}
-
 	$emailsAEnviar = getEmail($db);
 	if (sizeof($emailsAEnviar) != 0) {
 		foreach ($emailsAEnviar as $email) {
