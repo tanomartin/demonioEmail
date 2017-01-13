@@ -80,7 +80,7 @@ while(1) {
 function exit_daemon($signo) {
 	require('claves.php');
 	if ($signo == 15) {
-		$bodymail = "El demonio a finalizdo por señal kill desde consola. Finalizado correctamente";
+		$bodymail = "El demonio a finalizado por señal kill desde consola. Finalizado correctamente";
 		write_log($bodymail,"FINALIZADO");
 	} else {
 		$bodymail = "Finalizacion incorrecta - Detalle error $signo";
