@@ -61,10 +61,10 @@ while(1) {
 			
 			if (envioMail($from, $pass, $fromRepli, $subject, $bodymail, $address, $attachments)) {
 				updateEmailEnviado($db, $email['id']);
-				$log = "Se Envió email desde $from a $address";
+				$log = "ID: ".$email['id']." - Se Envió email desde $from a $address";
 				write_log($log, "INFO");
 			} else {
-				$log = "No se pudo enviar email desde $from a $address";
+				$log = "ID: ".$email['id']." - No se pudo Enviar email desde $from a $address";
 				write_log($log, "WARNING");
 			}
 			
