@@ -79,9 +79,14 @@ while(1) {
 // Esta es mi funcion de salida
 function exit_daemon($signo) {
 	require('claves.php');
-	$bodymail = "Alguien quiere que me vaya!, recibo la señal $signo";
+	if ($signo == 15) {
+		$bodymail = "El demonio a finalizdo por señal kill desde consola. Finalizado correctamente";
+		write_log($bodymail,"FINALIZADO");
+	} else {
+		$bodymail = "Finalizacion incorrecta - Detalle error $signo";
+		write_log($bodymail,"FINALIZADO ERROR");
+	}
 	envioMail($emailErrorSalida, $claveEmailSalida, "Sistemas", "Demonio Finalizado", $bodymail, $emailErrorEntrada, null);
-	write_log($bodymail,"FINALIZADO");
     exit(0);
 }
 ?>
