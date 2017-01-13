@@ -16,7 +16,7 @@ if($pid) {
     // Soy el padre por lo tanto necesito morir
     $log = "Proceso padre terminado";
 	write_log($log, "INFO");
-    exit();
+    exit(0);
 }
 
 // De aqui en adelante solo se ejecuta si soy el hijo y futuro daemon
@@ -82,6 +82,6 @@ function exit_daemon($signo) {
 	$bodymail = "Alguien quiere que me vaya!, recibo la señal $signo";
 	envioMail($emailErrorSalida, $claveEmailSalida, "Sistemas", "Demonio Finalizado", $bodymail, $emailErrorEntrada, null);
 	write_log($bodymail,"FINALIZADO");
-    exit();
+    exit(0);
 }
 ?>
