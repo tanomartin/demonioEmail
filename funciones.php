@@ -15,19 +15,25 @@ function envioMail($from, $passw, $fromRepli, $subject, $bodymail, $address, $at
 	$mail->SetFrom($from, $fromRepli);
 	$mail->AddReplyTo($from, $fromRepli);
 	$mail->Subject=$subject;
-	$bodymail.=" El dia ".$fechamail." a las ".$horamail.".";
+	$bodymail.=" Correo enviado el dia ".$fechamail." a las ".$horamail.".";
 	$mail->MsgHTML($bodymail);
 	$nameto = "";
 	$mail->AddAddress($address, $nameto);
+	
 	if ($attachments != null) {
 		foreach($attachments as $attachment) {
-			$mail->AddAttachment($attachment['adjunto']);
+			if (file_exists($attachment['adjunto'])) {
+				$mail->AddAttachment($attachment['adjunto']);
+			} else {
+				return 2;
+			}
 		}
 	}
+	
 	if(!$mail->Send()) {
-		return false;
+		return 1;
 	}
-	return true;
+	return 0;
 }
 
 //obtengo los emails a enviar

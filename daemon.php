@@ -57,12 +57,18 @@ while(1) {
 			$address = $email['address'];
 			$attachments = getAttachment($db, $email['id']);
 			
-			if (envioMail($from, $pass, $fromRepli, $subject, $bodymail, $address, $attachments)) {
+			$resultadoEnvio = envioMail($from, $pass, $fromRepli, $subject, $bodymail, $address, $attachments);
+			if ($resultadoEnvio == 0) {
 				updateEmailEnviado($db, $email['id']);
 				$log = "ID: ".$email['id']." - Se Envió email desde $from a $address";
 				write_log($log, "INFO");
-			} else {
+			}
+			if ($resultadoEnvio == 1) {
 				$log = "ID: ".$email['id']." - No se pudo Enviar email desde $from a $address";
+				write_log($log, "WARNING");
+			}
+			if ($resultadoEnvio == 2) {
+				$log = "ID: ".$email['id']." - No se pudo adjuntar archivo al Enviar email desde $from a $address";
 				write_log($log, "WARNING");
 			}
 			
