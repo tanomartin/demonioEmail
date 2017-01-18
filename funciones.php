@@ -39,7 +39,7 @@ function envioMail($from, $passw, $fromRepli, $subject, $bodymail, $address, $at
 //obtengo los emails a enviar
 function getEmail($db) {
 	$arrayEmails = array();
-	$sqlGetEmail = "SELECT * FROM bandejasalida WHERE enviado = 0";
+	$sqlGetEmail = "SELECT * FROM bandejasalida";
 	$resGetEmail = $db->query($sqlGetEmail);
 	if ($resGetEmail) {
 		while ($rowGetEmail = $resGetEmail->fetch_assoc()) {
@@ -94,12 +94,17 @@ function getUsuario($db, $email) {
 	return $rowGetNombre['nombre'];
 }
 
-//actualizao los emails enviados.
-function updateEmailEnviado($db, $idEmail) {
+//paso mail de salida a enviado.
+function pasarBandejaEnviados($db, $email) {
 	$fechaenvio = date ( "Y-m-d H:i:s" );
-	$sqlUpdateEnvio = "UPDATE bandejasalida SET enviado = 1, fechaenvio = '$fechaenvio' WHERE id = $idEmail";
-	$resUpdateEnvio = $db->query($sqlUpdateEnvio);
-	if (!$resUpdateEnvio) {
+	$sqlInsertEnviados = "INSERT INTO bandejaenviados VALUES(".$email['id'].",'".$email['from']."','".$email['subject']."','".$email['body']."','".$email['address']."','".$email['modulocreador']."','".$fechaenvio."','".$email['fecharegistro']."','".$email['usuarioregistro'].")";
+	$sqlDeleteSalida = "DELETE FROM bandejasalida WHERE id = ".$email['id'];
+	$resInsertEnviados = $db->query($sqlInsertEnviados);
+	if (!$resInsertEnviados) {
+		throw new Exception($db->error);
+	}
+	$resDeleteSalida = $db->query($sqlDeleteSalida);
+	if (!$resDeleteSalida) {
 		throw new Exception($db->error);
 	}
 }

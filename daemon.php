@@ -59,7 +59,7 @@ while(1) {
 			
 			$resultadoEnvio = envioMail($from, $pass, $fromRepli, $subject, $bodymail, $address, $attachments);
 			if ($resultadoEnvio == 0) {
-				updateEmailEnviado($db, $email['id']);
+				pasarBandejaEnviados($db, $email);
 				$log = "ID: ".$email['id']." - Se Envió email desde $from a $address";
 				write_log($log, "INFO");
 			}
