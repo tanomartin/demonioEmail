@@ -47,6 +47,7 @@ while(1) {
 	}
 	$emailsAEnviar = getEmail($db);
 	if (sizeof($emailsAEnviar) != 0) {
+		$arch = fopen($logfile, "a+");
 		foreach ($emailsAEnviar as $email) {
 			$from = $email['from'];
 			$pass = getPass($db, $from);
@@ -61,18 +62,18 @@ while(1) {
 			if ($resultadoEnvio == 0) {
 				pasarBandejaEnviados($db, $email);
 				$log = "ID: ".$email['id']." - Se Envió email desde $from a $address";
-				write_log($log, "INFO");
+				fwrite($arch, "[".date("Y-m-d H:i:s")." - INFO ] ".$log."\n");
 			}
 			if ($resultadoEnvio == 1) {
 				$log = "ID: ".$email['id']." - No se pudo Enviar email desde $from a $address";
-				write_log($log, "WARNING");
+				fwrite($arch, "[".date("Y-m-d H:i:s")." - WARNING ] ".$log."\n");
 			}
 			if ($resultadoEnvio == 2) {
 				$log = "ID: ".$email['id']." - No se pudo adjuntar archivo al Enviar email desde $from a $address";
-				write_log($log, "WARNING");
+				fwrite($arch, "[".date("Y-m-d H:i:s")." - WARNING ] ".$log."\n");
 			}
-			
 		}
+		fclose($arch);
 	} else {
 		$log = "No hay mails para enviar";
 		write_log($log, "INFO");
