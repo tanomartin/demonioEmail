@@ -47,6 +47,7 @@ while(1) {
 	}
 	$emailsAEnviar = getEmail($db);
 	if (sizeof($emailsAEnviar) != 0) {
+		$logfile = "logs/daemon_log_".date("Y-m-d").".txt";
 		$arch = fopen($logfile, "a+");
 		foreach ($emailsAEnviar as $email) {
 			$from = $email['from'];
