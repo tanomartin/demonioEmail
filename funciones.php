@@ -10,15 +10,23 @@ function envioMail($from, $passw, $fromRepli, $subject, $bodymail, $address, $at
 	$mail->SMTPAuth=true;				// enable SMTP authentication
 	$mail->Host="smtp.ospim.com.ar";	// sets the SMTP server
 	$mail->Port=25;						// set the SMTP port for the GMAIL server
-	$mail->Username=$from;			// SMTP account username
+	$mail->Username=$from;				// SMTP account username
 	$mail->Password=$passw;				// SMTP account password
 	$mail->SetFrom($from, $fromRepli);
 	$mail->AddReplyTo($from, $fromRepli);
 	$mail->Subject=$subject;
 	$bodymail.=" Correo enviado el dia ".$fechamail." a las ".$horamail.".";
 	$mail->MsgHTML($bodymail);
-	$nameto = "";
-	$mail->AddAddress($address, $nameto);
+	
+	$pos = strpos($address, ";");
+	if ($pos === false) {
+		$mail->AddAddress($address);
+	} else {
+		$arrayAddres = explode(";",$address);
+		foreach ($arrayAddres as $emailTo) {
+			$mail->AddBCC($emailTo);
+		}
+	}
 	
 	if ($attachments != null) {
 		foreach($attachments as $attachment) {
