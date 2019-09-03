@@ -105,7 +105,7 @@ function getUsuario($db, $email) {
 //paso mail de salida a enviado.
 function pasarBandejaEnviados($db, $email) {
 	$fechaenvio = date ( "Y-m-d H:i:s" );
-	$sqlInsertEnviados = "INSERT INTO bandejaenviados VALUES(".$email['id'].",'".$email['from']."','".$email['subject']."','".$email['body']."','".$email['address']."','".$email['modulocreador']."','".$fechaenvio."','".$email['fecharegistro']."','".$email['usuarioregistro']."')";
+	$sqlInsertEnviados = "INSERT INTO bandejaenviados VALUES(".$email['id'].",'".$email['from']."','".$email['subject']."','".$email['body']."','".$email['address']."','".$fechaenvio."')";
 	$sqlDeleteSalida = "DELETE FROM bandejasalida WHERE id = ".$email['id'];
 	$resInsertEnviados = $db->query($sqlInsertEnviados);
 	if (!$resInsertEnviados) {
