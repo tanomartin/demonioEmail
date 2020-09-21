@@ -47,7 +47,7 @@ function envioMail($from, $passw, $fromRepli, $subject, $bodymail, $address, $at
 //obtengo los emails a enviar
 function getEmail($db) {
 	$arrayEmails = array();
-	$sqlGetEmail = "SELECT * FROM bandejasalida";
+	$sqlGetEmail = "SELECT b.* FROM bandejasalida b, bandejasalidameta m WHERE b.id = m.id and m.fecharegistro < NOW()";
 	$resGetEmail = $db->query($sqlGetEmail);
 	if ($resGetEmail) {
 		while ($rowGetEmail = $resGetEmail->fetch_assoc()) {
